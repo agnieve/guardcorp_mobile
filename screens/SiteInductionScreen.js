@@ -26,12 +26,13 @@ export default function SiteInductionScreen(props){
             user: user,
             picture: picture,
             site: site,
-            start: new Date(),
+            date: new Date(),
             end: ""
         };
 
-        await saveEvent(newEvent);
-        await saveStorage('event', newEvent);
+        const result = await saveEvent(newEvent);
+        await saveStorage('event', result);
+        console.log("add event result: ",result);
         navigation.push('Dashboard');
 
     }

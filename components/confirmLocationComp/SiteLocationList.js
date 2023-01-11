@@ -55,6 +55,8 @@ export default function SiteLocationList(props) {
                     <FlashList
                         data={nearSites}
                         renderItem={({item}) => <CustomButton onPress={async () => {
+                            console.log("selected site distance: ", item.distanceFromSite);
+
                             if (item.distanceFromSite > 11896611) {
                                 setVisible(true);
                             }else{

@@ -2,12 +2,17 @@ import {Text, View} from "react-native";
 import CustomBox from "./CustomBox";
 import CustomButton from "../CustomButton";
 import {MaterialIcons} from "@expo/vector-icons";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ReportModal from "./ReportModal";
 import PatrolModal from "./PatrolModal";
 import CustomAlert from "../CustomAlert";
 import InspectionModal from "./InspectionModal";
 import EndShiftModal from "./EndShiftModal";
+import {addPatrol} from "../../utility/api/patrol";
+import {removeStorage} from "../../utility/asyncStorage";
+import {addInspection} from "../../utility/api/inspection";
+import {addReport} from "../../utility/api/report";
+import {downloadEvent, shiftOut} from "../../utility/api/saveEvent";
 
 export default function BoxComp(props) {
 
@@ -19,7 +24,50 @@ export default function BoxComp(props) {
     const [alertVisible, setAlertVisible] = useState(false);
     const [alertContent, setAlertContent] = useState("");
 
-    const {user, site, event} = props;
+    const {user, site, myEvent, setNewAction, setNewAction2} = props;
+
+    async function addReportHandler(type, notes) {
+        await addReport({
+            type: type, notes: notes, date: new Date(), eventId: myEvent?._id
+        });
+
+        setNewAction(prev => prev + 1);
+
+        return true;
+    }
+
+    async function shiftOutHandler(reason) {
+        await shiftOut({
+            eventId:myEvent?._id, reason:reason, date: new Date()
+        });
+
+        await downloadEvent(myEvent?._id);
+
+        setNewAction(prev => prev + 1);
+
+        return true;
+    }
+
+    async function addInspectionHandler(type, notes) {
+        await addInspection({
+            type: type, notes: notes, date: new Date(), eventId: myEvent?._id
+        });
+
+        setNewAction2(prev => prev + 1);
+
+        return true;
+    }
+
+    async function addPatrolHandler(status, notes, type) {
+
+        await addPatrol({
+            dateTime: new Date(), eventId: myEvent?._id, notes: notes, type: type, status: status
+        });
+
+        setNewAction2(prev => prev + 1);
+
+        return true;
+    }
 
     return (
 
@@ -28,35 +76,40 @@ export default function BoxComp(props) {
             <CustomAlert modalVisible={alertVisible} setModalVisible={setAlertVisible}>
                 <Text>{alertContent}</Text>
                 <View className={'flex items-end mt-3'}>
-                    <CustomButton addStyle={'bg-white'} onPress={()=> setAlertVisible(false)}>
+                    <CustomButton addStyle={'bg-white'} onPress={() => setAlertVisible(false)}>
                         <Text>OK</Text>
                     </CustomButton>
                 </View>
             </CustomAlert>
 
             <ReportModal modalVisible={reportModalVisible} setModalVisible={setReportModalVisible} name={user?.fullName}
-                         site={site?.siteName} address={site?.address}/>
+                         site={site?.siteName} address={site?.address} addReport={addReportHandler}/>
             <PatrolModal modalVisible={patrolModalVisible} setModalVisible={setPatrolModalVisible} name={user?.fullName}
-                         site={site?.siteName} address={site?.address} setPatrolStarted={setPatrolStarted}/>
-            <InspectionModal modalVisible={inspectionModalVisible} setModalVisible={setInspectionModalVisible} name={user?.fullName}
-                         site={site?.siteName} address={site?.address}/>
+                         site={site?.siteName} address={site?.address} setPatrolStarted={setPatrolStarted}
+                         addPatrolHandler={addPatrolHandler}/>
+            <InspectionModal modalVisible={inspectionModalVisible} setModalVisible={setInspectionModalVisible}
+                             name={user?.fullName}
+                             site={site?.siteName} address={site?.address} addInspection={addInspectionHandler}/>
 
-            <EndShiftModal modalVisible={endShiftModalVisible} setModalVisible={setEndShiftModalVisible} name={user?.fullName}
-                             site={site?.siteName} address={site?.address} event={event}/>
+            <EndShiftModal modalVisible={endShiftModalVisible} setModalVisible={setEndShiftModalVisible}
+                           name={user?.fullName}
+                           mySite={site?.siteName} address={site?.address} shiftOutHandler={shiftOutHandler} myEvent={myEvent}/>
 
             <View className={'bg-[#475c6f] h-[21%] w-[46%] mr-1 mb-2'}>
                 <CustomButton
                     addStyle={`h-full rounded-lg border border-white ${patrolStarted ? 'bg-cyan-700' : 'bg-cyan-500'}`}
-                    onPress={() => {
-                        if(patrolStarted){
+                    onPress={async () => {
+                        if (patrolStarted) {
                             setAlertContent("Patrol has already started");
                             setAlertVisible(true);
-                        }
-                        else{
+                        } else {
+                            await addPatrolHandler("START", "", "");
                             setPatrolStarted(true);
                             setAlertContent("Patrol started");
                             setAlertVisible(true);
                         }
+
+
                     }}>
                     <View className={'flex justify-center items-center'}>
                         <Text className={'text-center text-base mb text-white'}>START PATROL</Text>
@@ -67,10 +120,10 @@ export default function BoxComp(props) {
             </View>
             <View className={'bg-[#475c6f] h-[21%] w-[46%] rounded-lg ml-1 mb-2'}>
                 <CustomButton addStyle={'h-full border border-white bg-cyan-500 '} onPress={() => {
-                    if(patrolStarted === false){
+                    if (patrolStarted === false) {
                         setAlertContent("Patrol has not yet started");
                         setAlertVisible(true);
-                    }else{
+                    } else {
                         setPatrolModalVisible(true);
                     }
                 }}>
@@ -89,10 +142,13 @@ export default function BoxComp(props) {
                 }}/>
             </View>
             <View className={'bg-[#475c6f] h-[21%] w-[46%] ml-1 mb-2'}>
-                <CustomBox title={'INSPECTION'} icon={'policy'} onPress={()=> setInspectionModalVisible(true)}/>
+                <CustomBox title={'INSPECTION'} icon={'policy'} onPress={() => setInspectionModalVisible(true)}/>
             </View>
             <View className={'bg-[#475c6f] h-[21%] w-[94%] mb-2'}>
-                <CustomButton addStyle={'h-full rounded-2xl border border-red-500 bg-cyan-500'} onPress={()=> setEndShiftModalVisible(true)}>
+                <CustomButton addStyle={'h-full rounded-2xl border border-red-500 bg-cyan-500'}
+                              onPress={() => {
+                                  setEndShiftModalVisible(true);
+                              }}>
                     <View className={'flex justify-center items-center'}>
                         <Text className={'text-center text-base mb text-white'}>END SHIFT</Text>
                         <MaterialIcons name={'highlight-off'} size={70} color={'red'}/>

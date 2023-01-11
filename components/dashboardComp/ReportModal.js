@@ -2,11 +2,13 @@ import ModalHeader from "./ModalHeader";
 import {Modal, Text, TextInput, View} from "react-native";
 import CustomButton from "../CustomButton";
 import {useState} from "react";
+import {addReport} from "../../utility/api/report";
 
 export default function ReportModal(props) {
 
-    const {modalVisible, setModalVisible, name, site, address} = props;
+    const {modalVisible, setModalVisible, name, site, address, addReport} = props;
     const [reportType, setReportType] = useState("");
+    const [notes, setNotes] = useState("");
 
     return (
         <Modal
@@ -48,8 +50,8 @@ export default function ReportModal(props) {
                         multiline
                         numberOfLines={10}
                         placeholder={'Comments or Notes'}
-                        // onChangeText={text => onChangeText(text)}
-                        // value={value}
+                        onChangeText={text => setNotes(text)}
+                        value={notes}
                         style={{
                             elevation: 2, shadowColor: 'black',
                             shadowOpacity: 0.25,
@@ -59,7 +61,12 @@ export default function ReportModal(props) {
                     />
             </View>
             <View className={'px-7 mt-5'}>
-                <CustomButton addStyle={'bg-cyan-500'}>
+                <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
+                    await addReport(reportType, notes);
+                    setReportType("");
+                    setNotes("");
+                    setModalVisible(false);
+                }}>
                     <Text className={'text-white text-center text-lg'}>Save Report</Text>
                 </CustomButton>
             </View>

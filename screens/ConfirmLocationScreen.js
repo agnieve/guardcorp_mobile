@@ -60,6 +60,8 @@ export default function ConfirmLocationScreen(props) {
 
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
+
+            console.log('my location', location);
         })();
     }, []);
 

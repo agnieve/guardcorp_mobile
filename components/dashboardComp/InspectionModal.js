@@ -5,8 +5,9 @@ import {useState} from "react";
 
 export default function InspectionModal(props) {
 
-    const {modalVisible, setModalVisible, name, site, address} = props;
+    const {modalVisible, setModalVisible, name, site, address, addInspection} = props;
     const [inspectionType, setInspectionType] = useState("");
+    const [notes, setNotes] = useState("");
 
     return (
         <Modal
@@ -54,8 +55,8 @@ export default function InspectionModal(props) {
                         multiline
                         numberOfLines={10}
                         placeholder={'Comments or Notes'}
-                        // onChangeText={text => onChangeText(text)}
-                        // value={value}
+                        onChangeText={text => setNotes(text)}
+                        value={notes}
                         style={{
                             elevation: 2, shadowColor: 'black',
                             shadowOpacity: 0.25,
@@ -65,7 +66,12 @@ export default function InspectionModal(props) {
                     />
             </View>
             <View className={'px-7 mt-5'}>
-                <CustomButton addStyle={'bg-cyan-500'}>
+                <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
+                    await addInspection(inspectionType, notes);
+                    setInspectionType("");
+                    setNotes("");
+                    setModalVisible(false);
+                }}>
                     <Text className={'text-white text-center text-lg'}>Save Inspection</Text>
                 </CustomButton>
             </View>

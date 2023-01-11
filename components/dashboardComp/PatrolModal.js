@@ -5,8 +5,9 @@ import {useState} from "react";
 
 export default function PatrolModal(props) {
 
-    const {modalVisible, setModalVisible, name, site, address, setPatrolStarted} = props;
+    const {modalVisible, setModalVisible, name, site, address, setPatrolStarted, addPatrolHandler} = props;
     const [patrolType, setPatrolType] = useState("");
+    const [notes, setNotes] = useState("");
 
     return (
         <Modal
@@ -47,6 +48,7 @@ export default function PatrolModal(props) {
                         textAlignVertical={'top'}
                         multiline
                         numberOfLines={10}
+                        onChangeText={(val) => setNotes(val)}
                         placeholder={'Comments or Notes'}
                         // onChangeText={text => onChangeText(text)}
                         // value={value}
@@ -59,8 +61,12 @@ export default function PatrolModal(props) {
                     />
             </View>
             <View className={'px-7 mt-5'}>
-                <CustomButton addStyle={'bg-cyan-500'} onPress={()=> {
+                <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
+                    await addPatrolHandler('END', notes, patrolType)
                     setPatrolStarted(false);
+                    setNotes("");
+                    setPatrolType("");
+                    setModalVisible(false);
                 }}>
                     <Text className={'text-white text-center text-lg'}>Save Patrol</Text>
                 </CustomButton>
