@@ -1,5 +1,5 @@
 import {Modal, Text, View} from "react-native";
-import CustomButton from "../CustomButton";
+import CustomButton from "./CustomButton";
 
 
 export default function CustomAlert(props) {

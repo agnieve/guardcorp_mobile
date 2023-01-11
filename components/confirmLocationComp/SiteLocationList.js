@@ -4,7 +4,7 @@ import {MaterialIcons} from "@expo/vector-icons";
 import {FlashList} from "@shopify/flash-list";
 import {useEffect, useState} from "react";
 import {getNearSites} from '../../utility/api/site';
-import CustomAlert from "./CustomAlert";
+import CustomAlert from "../CustomAlert";
 import {saveStorage} from "../../utility/asyncStorage";
 import {site} from "../../atom/user";
 import {useAtom} from "jotai";
