@@ -28,7 +28,6 @@ export default function LoginScreen() {
                 setUserSuccess(result);
             }
         } catch (e) {
-            console.log(e);
             setError(e.message);
         }
     }

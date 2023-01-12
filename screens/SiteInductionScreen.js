@@ -32,7 +32,6 @@ export default function SiteInductionScreen(props){
 
         const result = await saveEvent(newEvent);
         await saveStorage('event', result);
-        console.log("add event result: ",result);
         navigation.push('Dashboard');
 
     }

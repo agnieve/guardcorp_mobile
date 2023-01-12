@@ -16,7 +16,6 @@ export async function addInspection(data){
     });
 
     const resp = await response.json();
-    console.log(resp);
     return resp;
 }
 
