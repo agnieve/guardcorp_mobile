@@ -27,14 +27,14 @@ export default function DashboardScreen(props) {
 
     const {navigation} = props;
 
-    useEffect(() => {
-        (async () => {
-            const result2 = await getStorage('event');
-            if (result2) {
-                setUseEvent(result2);
-            }
-        })();
-    }, []);
+    // useEffect(() => {
+    //     (async () => {
+    //         const result2 = await getStorage('event');
+    //         if (result2) {
+    //             setUseEvent(result2);
+    //         }
+    //     })();
+    // }, []);
 
     useEffect(() => {
         (async () => {
@@ -55,6 +55,7 @@ export default function DashboardScreen(props) {
     }, [newAction]);
 
     useEffect(() => {
+
         getPatrols(useEvent?._id).then((data) => {
             setPatrols(data);
         });

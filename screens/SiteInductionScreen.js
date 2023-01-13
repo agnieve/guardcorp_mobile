@@ -32,8 +32,9 @@ export default function SiteInductionScreen(props){
         };
 
         const result = await saveEvent(newEvent);
-        await saveStorage('event', result);
+        setUseEvent(result);
 
+        await saveStorage('event', result);
 
     }
 
@@ -64,13 +65,13 @@ export default function SiteInductionScreen(props){
             <View className={'px-5'}>
                 <Text className={'font-bold mt-5'}>I confirm that:</Text>
                 <Text className={'mb-5'}>{useSite?.complianceInformation}</Text>
-                <Text>Proof of License</Text>
-                {
-                    usePicture?.data ? <Image source={{uri: usePicture?.data?.display_url}} style={{width: '100%', height:300}} />
-                        : <View>
-                        <Text>Loading . . .</Text>
-                        </View>
-                }
+                {/*<Text>Proof of License</Text>*/}
+                {/*{*/}
+                {/*    usePicture?.data ? <Image source={{uri: usePicture?.data?.display_url}} style={{width: '100%', height:300}} />*/}
+                {/*        : <View>*/}
+                {/*        <Text>Loading . . .</Text>*/}
+                {/*        </View>*/}
+                {/*}*/}
             </View>
 
 

@@ -27,6 +27,7 @@ export default function BoxComp(props) {
     const {user, site, myEvent, setNewAction, setNewAction2} = props;
 
     async function addReportHandler(type, notes) {
+
         await addReport({
             type: type, notes: notes, date: new Date(), eventId: myEvent?._id
         });
