@@ -19,12 +19,14 @@ export default function LoginScreen() {
 
     async function login() {
         try {
+            setModalVisible(true);
+
             const result = await verifyLicense(license);
+
 
             if(result.message){
                 setError(result.message);
             }else{
-                setModalVisible(true);
                 setUserSuccess(result);
             }
         } catch (e) {

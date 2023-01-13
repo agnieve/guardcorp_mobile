@@ -67,10 +67,10 @@ export default function InspectionModal(props) {
             </View>
             <View className={'px-7 mt-5'}>
                 <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
-                    await addInspection(inspectionType, notes);
                     setInspectionType("");
                     setNotes("");
                     setModalVisible(false);
+                    await addInspection(inspectionType, notes);
                 }}>
                     <Text className={'text-white text-center text-lg'}>Save Inspection</Text>
                 </CustomButton>

@@ -59,9 +59,10 @@ export default function SiteLocationList(props) {
                             if (item.distanceFromSite > 11896611) {
                                 setVisible(true);
                             }else{
-                                await saveStorage('site', item);
                                 setUseSite(item);
                                 setModalVisible(false);
+                                await saveStorage('site', item);
+
                                 navigation.push("VerifyLicense");
                             }
                         }

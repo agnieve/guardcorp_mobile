@@ -62,11 +62,12 @@ export default function PatrolModal(props) {
             </View>
             <View className={'px-7 mt-5'}>
                 <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
-                    await addPatrolHandler('END', notes, patrolType)
                     setPatrolStarted(false);
                     setNotes("");
                     setPatrolType("");
                     setModalVisible(false);
+                    await addPatrolHandler('END', notes, patrolType)
+
                 }}>
                     <Text className={'text-white text-center text-lg'}>Save Patrol</Text>
                 </CustomButton>

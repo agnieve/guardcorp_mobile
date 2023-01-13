@@ -103,10 +103,10 @@ export default function BoxComp(props) {
                             setAlertContent("Patrol has already started");
                             setAlertVisible(true);
                         } else {
-                            await addPatrolHandler("START", "", "");
                             setPatrolStarted(true);
                             setAlertContent("Patrol started");
                             setAlertVisible(true);
+                            await addPatrolHandler("START", "", "");
                         }
 
 

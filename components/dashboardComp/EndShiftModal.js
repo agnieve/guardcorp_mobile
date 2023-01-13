@@ -55,15 +55,15 @@ export default function EndShiftModal(props) {
 
             <View className={'px-7 mt-4'}>
                 <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
+                    setUseSite(null);
+                    setUseEvent(null);
+                    setUsePicture(null);
+                    setUserUser(null);
                     await shiftOutHandler(reason);
                     await removeStorage('user');
                     await removeStorage('site');
                     await removeStorage('picture');
                     await removeStorage('event');
-                    setUseSite(null);
-                    setUseEvent(null);
-                    setUsePicture(null);
-                    setUserUser(null);
                 }}>
                     <Text className={'text-white text-center text-lg'}>End Shift</Text>
                 </CustomButton>

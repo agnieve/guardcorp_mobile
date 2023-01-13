@@ -62,10 +62,10 @@ export default function ReportModal(props) {
             </View>
             <View className={'px-7 mt-5'}>
                 <CustomButton addStyle={'bg-cyan-500'} onPress={async ()=> {
-                    await addReport(reportType, notes);
                     setReportType("");
                     setNotes("");
                     setModalVisible(false);
+                    await addReport(reportType, notes);
                 }}>
                     <Text className={'text-white text-center text-lg'}>Save Report</Text>
                 </CustomButton>

@@ -18,6 +18,7 @@ export default function SiteInductionScreen(props){
     const [useEvent, setUseEvent] = useAtom(event);
 
     async function addEvent(){
+        navigation.push('Dashboard');
         const user = await getStorage('user');
         const site = await getStorage('site');
         const picture = await getStorage('picture');
@@ -32,7 +33,7 @@ export default function SiteInductionScreen(props){
 
         const result = await saveEvent(newEvent);
         await saveStorage('event', result);
-        navigation.push('Dashboard');
+
 
     }
 
@@ -64,7 +65,12 @@ export default function SiteInductionScreen(props){
                 <Text className={'font-bold mt-5'}>I confirm that:</Text>
                 <Text className={'mb-5'}>{useSite?.complianceInformation}</Text>
                 <Text>Proof of License</Text>
-                <Image source={{uri: usePicture?.data?.display_url}} style={{width: '100%', height:300}} />
+                {
+                    usePicture?.data ? <Image source={{uri: usePicture?.data?.display_url}} style={{width: '100%', height:300}} />
+                        : <View>
+                        <Text>Loading . . .</Text>
+                        </View>
+                }
             </View>
 
 
