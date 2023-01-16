@@ -8,6 +8,7 @@ import CustomAlert from "../CustomAlert";
 import {saveStorage} from "../../utility/asyncStorage";
 import {site} from "../../atom/user";
 import {useAtom} from "jotai";
+import {getDistanceBetweenPoints} from "../../utility/distance";
 
 export default function SiteLocationList(props) {
 
@@ -18,15 +19,16 @@ export default function SiteLocationList(props) {
     const [useSite, setUseSite] = useAtom(site);
 
     useEffect(() => {
+
         getNearSites(coords).then((data) => {
             setNearSites(data);
-        })
+        });
     }, []);
 
     return (
         <>
             <CustomAlert modalVisible={visible} setModalVisible={setVisible}>
-                <Text>Your Distance exceeds 500m away from the Site</Text>
+                <Text>You cannot enter the Site, your distance is 50 meters away</Text>
                 <View className={'flex items-end'}>
                     <CustomButton addStyle={'bg-white'} onPress={()=> setVisible(false)}>
                         <Text>OK</Text>
@@ -54,24 +56,33 @@ export default function SiteLocationList(props) {
                     <Text className="text-lg text-center">Select Site</Text>
                     <FlashList
                         data={nearSites}
-                        renderItem={({item}) => <CustomButton onPress={async () => {
+                        renderItem={({item}) => {
 
-                            if (item.distanceFromSite > 11896611) {
-                                setVisible(true);
-                            }else{
-                                setUseSite(item);
-                                setModalVisible(false);
-                                await saveStorage('site', item);
+                            const result = getDistanceBetweenPoints(item.latitude, item.longitude, coords.latitude, coords.longitude);
 
-                                navigation.push("VerifyLicense");
-                            }
-                        }
-                        } addStyle={'bg-white py-2'}>
-                            <View className={'bg-slate-100 px-5 py-3 mx-3 rounded-lg'}>
-                                <Text className={'text-base font-bold'}>{item.siteName}</Text>
-                                <Text>{item.address}</Text>
-                            </View>
-                        </CustomButton>}
+                            return(
+                                <CustomButton onPress={async () => {
+
+
+                                    if (result > 50) {
+                                        setVisible(true);
+                                    }else{
+                                        setUseSite(item);
+                                        setModalVisible(false);
+                                        await saveStorage('site', item);
+
+                                        navigation.push("VerifyLicense");
+                                    }
+                                }
+                                } addStyle={'bg-white py-2'}>
+                                    <View className={'bg-slate-100 px-5 py-3 mx-3 rounded-lg'}>
+                                        <Text className={'text-base font-bold'}>{item.siteName}</Text>
+                                        <Text className={'mb-3'}>{item.address}</Text>
+                                        <Text>Distance From Site: {parseInt(result).toLocaleString('en-US')} meters</Text>
+                                    </View>
+                                </CustomButton>
+                            )
+                        }}
                         estimatedItemSize={50}
                     />
                 </View>

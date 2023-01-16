@@ -71,7 +71,7 @@ export default function ConfirmLocationScreen(props) {
                               navigation={navigation}/>
             <Image className={'w-full h-72'}
                    source={{uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location?.coords?.latitude},${location?.coords?.longitude}&zoom=14&size=400x400&key=${GOOGLE_STATIC_API_KEY}`}}/>
-            <CustomButton addStyle={'mx-5 mt-10 py-4'} onPress={() => setModalVisible(true)}>
+            <CustomButton addStyle={'mx-5 mt-10 py-4 bg-cyan-500'} onPress={() => setModalVisible(true)}>
                 <Text className={'text-white text-center'}>Confirm Location</Text>
             </CustomButton>
         </View>

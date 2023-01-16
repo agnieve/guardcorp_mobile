@@ -63,7 +63,7 @@ export default function LoginScreen() {
                     onChangeText={(val) => setLicense(val)}
                     placeholder="Enter your license"
                 />
-                <CustomButton addStyle={'mt-3'} onPress={login}>
+                <CustomButton addStyle={'mt-3 bg-cyan-500'} onPress={login}>
                     <Text className="text-center text-white">Verify License</Text>
                 </CustomButton>
             </View>
