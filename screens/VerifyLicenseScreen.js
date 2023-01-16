@@ -44,7 +44,7 @@ export default function VerifyLicenseScreen(props) {
         return (
             <View className={'flex-1 justify-center items-center m-10'}>
                 <Text className={'text-center mb-2'}>We need your permission to show the camera</Text>
-                <CustomButton onPress={requestPermission}><Text className={'text-white'}>Grant
+                <CustomButton addStyle={'bg-cyan-500'} onPress={requestPermission}><Text className={'text-white'}>Grant
                     Permission</Text></CustomButton>
             </View>
         );

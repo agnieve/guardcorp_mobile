@@ -76,7 +76,7 @@ export default function SiteInductionScreen(props){
 
 
            <View className={'absolute inset-x-0 bottom-0'}>
-               <View className={'flex items-center bg-cyan-700 py-5'}>
+               <View className={'flex items-center bg-cyan-500 py-5'}>
                    <TouchableOpacity onPress={addEvent}>
                        <Text className={'text-white'}>AGREE & START SHIFT</Text>
                    </TouchableOpacity>
