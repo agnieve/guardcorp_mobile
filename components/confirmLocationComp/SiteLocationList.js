@@ -9,23 +9,45 @@ import {saveStorage} from "../../utility/asyncStorage";
 import {site} from "../../atom/user";
 import {useAtom} from "jotai";
 import {getDistanceBetweenPoints} from "../../utility/distance";
+import * as Location from "expo-location";
 
 export default function SiteLocationList(props) {
 
 
-    const {modalVisible, setModalVisible, coords, navigation} = props;
+    const {modalVisible, setModalVisible, navigation, refresh} = props;
     const [visible, setVisible] = useState(false);
     const [nearSites, setNearSites] = useState([]);
     const [useSite, setUseSite] = useAtom(site);
+    const [location, setLocation] = useState({});
+    const [errorMsg, setErrorMsg] = useState("");
+
 
     useEffect(() => {
 
-        console.log("coords from site location list: ",coords);
+        (async () => {
 
-        getNearSites(coords).then((data) => {
-            setNearSites(data);
-        });
-    }, []);
+            try{
+                let {status} = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    return;
+                }
+
+                const loc = await Location.getCurrentPositionAsync({});
+
+                setLocation(loc.coords);
+
+                getNearSites(loc.coords).then((data) => {
+                    setNearSites(data);
+                });
+
+                console.log("log from getting location on async: ",loc);
+            }catch(e){
+                console.log(e);
+            }
+
+        })();
+    }, [refresh]);
 
     return (
         <>
@@ -56,14 +78,14 @@ export default function SiteLocationList(props) {
                 </View>
                 <View className={'flex-1 justify-center'}>
                     <Text className="text-lg text-center">Select Site</Text>
-                    <Text className={'mx-7'}>My Latitude: {coords.latitude}</Text>
-                    <Text className={'mx-7 mb-3'}>My Latitude: {coords.longitude}</Text>
+                    <Text className={'mx-7'}>My Latitude: {location?.latitude}</Text>
+                    <Text className={'mx-7 mb-3'}>My Latitude: {location?.longitude}</Text>
 
                     <FlashList
                         data={nearSites}
                         renderItem={({item}) => {
 
-                            let result = getDistanceBetweenPoints(item.latitude, item.longitude, coords?.latitude, coords?.longitude);
+                            let result = getDistanceBetweenPoints(item.latitude, item.longitude, location?.latitude, location?.longitude);
 
                             return(
                                 <CustomButton onPress={async () => {

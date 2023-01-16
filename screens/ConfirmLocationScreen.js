@@ -7,14 +7,15 @@ import SiteLocationList from "../components/confirmLocationComp/SiteLocationList
 import {useAtom} from "jotai";
 import {event, picture, site} from "../atom/user";
 import {getStorage} from "../utility/asyncStorage";
+import {getNearSites} from "../utility/api/site";
 
 export default function ConfirmLocationScreen(props) {
 
     const {navigation} = props;
-    const [errorMsg, setErrorMsg] = useState("");
-    const [location, setLocation] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const [refresh, setRefresh] = useState(0);
+    const [location, setLocation] = useState({});
+    const [errorMsg, setErrorMsg] = useState("");
 
     const [useSite, setUseSite] = useAtom(site);
     const [usePicture, setUsePicture] = useAtom(picture);
@@ -50,7 +51,6 @@ export default function ConfirmLocationScreen(props) {
         })();
     }, []);
 
-    let loc;
     useEffect(() => {
 
         (async () => {
@@ -62,37 +62,34 @@ export default function ConfirmLocationScreen(props) {
                     return;
                 }
 
-                loc = await Location.getCurrentPositionAsync({});
-                setLocation(loc);
+                const loc = await Location.getCurrentPositionAsync({});
 
-                console.log("log from getting location on async: ",loc);
+                setLocation(loc.coords);
+
             }catch(e){
-                console.log(e);
             }
 
         })();
-    }, [refresh]);
-
+    }, []);
 
     return (
         <View className={'flex justify-center'}>
             {/*<Text className={'text-center'}>{location?.coords?.latitude}</Text>*/}
+            <SiteLocationList modalVisible={modalVisible} setModalVisible={setModalVisible}
+                              navigation={navigation} refresh={refresh}/>
             {
-                location.coords && <SiteLocationList modalVisible={modalVisible} setModalVisible={setModalVisible} coords={location?.coords}
-                                                   navigation={navigation}/>
+                location ? <Image className={'w-full h-72'}
+                                  source={{uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location?.latitude},${location?.longitude}&zoom=14&size=400x400&key=${GOOGLE_STATIC_API_KEY}`}}/>
+                    : <View>
+                    <Text className={'text-center'}>Loading . . . </Text>
+                    </View>
             }
-            <Image className={'w-full h-72'}
-                   source={{uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location?.coords?.latitude},${location?.coords?.longitude}&zoom=14&size=400x400&key=${GOOGLE_STATIC_API_KEY}`}}/>
-            {
-                location.coords ? <CustomButton addStyle={'mx-5 mt-10 py-4 bg-cyan-500'} onPress={() => setModalVisible(true)}>
-                    <Text className={'text-white text-center'}>Confirm Location</Text>
-                </CustomButton> : <>
-                    <Text className={'text-center mt-10 mb-2'}>Could not get your Current Location</Text>
-                    <CustomButton addStyle={'mx-5 py-4 bg-cyan-500'} onPress={() => setRefresh(prev => prev + 1)}>
-                        <Text className={'text-white text-center'}>Refresh</Text>
-                    </CustomButton>
-                </>
-            }
+            <CustomButton addStyle={'mx-5 mt-10 py-4 bg-cyan-500'} onPress={() => {
+                setModalVisible(true)
+                setRefresh(prev => prev + 1)
+            }}>
+                <Text className={'text-white text-center'}>Confirm Location</Text>
+            </CustomButton>
         </View>
     )
 }
