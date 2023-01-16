@@ -20,6 +20,8 @@ export default function SiteLocationList(props) {
 
     useEffect(() => {
 
+        console.log("coords from site location list: ",coords);
+
         getNearSites(coords).then((data) => {
             setNearSites(data);
         });
@@ -54,11 +56,14 @@ export default function SiteLocationList(props) {
                 </View>
                 <View className={'flex-1 justify-center'}>
                     <Text className="text-lg text-center">Select Site</Text>
+                    <Text className={'mx-7'}>My Latitude: {coords.latitude}</Text>
+                    <Text className={'mx-7 mb-3'}>My Latitude: {coords.longitude}</Text>
+
                     <FlashList
                         data={nearSites}
                         renderItem={({item}) => {
 
-                            const result = getDistanceBetweenPoints(item.latitude, item.longitude, coords.latitude, coords.longitude);
+                            let result = getDistanceBetweenPoints(item.latitude, item.longitude, coords?.latitude, coords?.longitude);
 
                             return(
                                 <CustomButton onPress={async () => {

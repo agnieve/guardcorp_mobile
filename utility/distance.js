@@ -4,23 +4,12 @@ function degreesToRadians(degrees){
 
 export function getDistanceBetweenPoints(lat1, lng1, lat2, lng2){
     // The radius of the planet earth in meters
-    let R = 6378137;
-    let dLat = degreesToRadians(lat2 - lat1);
-    let dLong = degreesToRadians(lng2 - lng1);
-    let a = Math.sin(dLat / 2)
-        *
-        Math.sin(dLat / 2)
-        +
-        Math.cos(degreesToRadians(lat1))
-        *
-        Math.cos(degreesToRadians(lat1))
-        *
-        Math.sin(dLong / 2)
-        *
-        Math.sin(dLong / 2);
+        var R = 6371.0710; // Radius of the Earth in miles
+        var rlat1 = lat1 * (Math.PI/180); // Convert degrees to radians
+        var rlat2 = lat2 * (Math.PI/180); // Convert degrees to radians
+        var difflat = rlat2-rlat1; // Radian difference (latitudes)
+        var difflon = (lng2-lng1) * (Math.PI/180); // Radian difference (longitudes)
 
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let distance = R * c;
-
-    return distance;
+        var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+        return d * 1000;
 }
