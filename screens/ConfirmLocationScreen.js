@@ -76,10 +76,13 @@ export default function ConfirmLocationScreen(props) {
         <View className={'flex justify-center'}>
             {/*<Text className={'text-center'}>{location?.coords?.latitude}</Text>*/}
             <SiteLocationList modalVisible={modalVisible} setModalVisible={setModalVisible}
-                              navigation={navigation} refresh={refresh}/>
+                              navigation={navigation} refresh={refresh} setRefresh={setRefresh}/>
             {
                 location ? <Image className={'w-full h-72'}
-                                  source={{uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location?.latitude},${location?.longitude}&zoom=14&size=400x400&key=${GOOGLE_STATIC_API_KEY}`}}/>
+                                  source={{uri:
+                                      `https://maps.googleapis.com/maps/api/staticmap?size=512x512&zoom=16&maptype=roadmap&markers=size:mid%7Ccolor:red%7C${location?.latitude}, ${location.longitude}&key=${GOOGLE_STATIC_API_KEY}`}} />
+                                          // `https://maps.googleapis.com/maps/api/staticmap?center=${location?.latitude},${location?.longitude}&zoom=14&size=400x400&key=${GOOGLE_STATIC_API_KEY}`}}
+
                     : <View>
                     <Text className={'text-center'}>Loading . . . </Text>
                     </View>

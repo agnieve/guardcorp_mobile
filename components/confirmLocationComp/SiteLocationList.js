@@ -14,47 +14,50 @@ import * as Location from "expo-location";
 export default function SiteLocationList(props) {
 
 
-    const {modalVisible, setModalVisible, navigation, refresh} = props;
+    const {modalVisible, setModalVisible, navigation, refresh, setRefresh} = props;
     const [visible, setVisible] = useState(false);
     const [nearSites, setNearSites] = useState([]);
     const [useSite, setUseSite] = useAtom(site);
     const [location, setLocation] = useState({});
     const [errorMsg, setErrorMsg] = useState("");
+    const [runTimeOut, setRunTimeOut] = useState(true);
 
+    let loc;
 
     useEffect(() => {
 
         (async () => {
-
-            try{
+            try {
                 let {status} = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
                     setErrorMsg('Permission to access location was denied');
                     return;
                 }
 
-                const loc = await Location.getCurrentPositionAsync({});
+                if(runTimeOut){
+                    setInterval(async () => {
+                        loc = await Location.getCurrentPositionAsync({});
 
-                setLocation(loc.coords);
+                        setLocation(loc.coords);
 
-                getNearSites(loc.coords).then((data) => {
-                    setNearSites(data);
-                });
+                        getNearSites(loc.coords).then((data) => {
+                            setNearSites(data);
+                        });
+                    }, 2000);
+                }
 
-                console.log("log from getting location on async: ",loc);
-            }catch(e){
-                console.log(e);
+            } catch (e) {
             }
 
         })();
-    }, [refresh]);
+    }, [runTimeOut]);
 
     return (
         <>
             <CustomAlert modalVisible={visible} setModalVisible={setVisible}>
                 <Text>You cannot enter the Site, your distance is 50 meters away</Text>
                 <View className={'flex items-end'}>
-                    <CustomButton addStyle={'bg-white'} onPress={()=> setVisible(false)}>
+                    <CustomButton addStyle={'bg-white'} onPress={() => setVisible(false)}>
                         <Text>OK</Text>
                     </CustomButton>
                 </View>
@@ -87,13 +90,14 @@ export default function SiteLocationList(props) {
 
                             let result = getDistanceBetweenPoints(item.latitude, item.longitude, location?.latitude, location?.longitude);
 
-                            return(
+                            return (
                                 <CustomButton onPress={async () => {
 
 
                                     if (result > 50) {
                                         setVisible(true);
-                                    }else{
+                                    } else {
+                                        setRunTimeOut(false);
                                         setUseSite(item);
                                         setModalVisible(false);
                                         await saveStorage('site', item);
@@ -105,7 +109,8 @@ export default function SiteLocationList(props) {
                                     <View className={'bg-slate-100 px-5 py-3 mx-3 rounded-lg'}>
                                         <Text className={'text-base font-bold'}>{item.siteName}</Text>
                                         <Text className={'mb-3'}>{item.address}</Text>
-                                        <Text>Distance From Site: {parseInt(result).toLocaleString('en-US')} meters</Text>
+                                        <Text>Distance From
+                                            Site: {parseInt(result).toLocaleString('en-US')} meters</Text>
                                     </View>
                                 </CustomButton>
                             )

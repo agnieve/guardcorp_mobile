@@ -48,8 +48,8 @@ export default function LoginScreen() {
     return (
         <View className={'flex-1'}>
             <VerifyModal userVerified={userVerified} data={userSuccess} modalVisible={modalVisible} setModalVisible={setModalVisible} />
-            <View className="px-5 py-20">
-                <Image style={{width: 100, height: 100}}
+            <View className="px-5 py-20 flex justify-center items-center">
+                <Image className={''} style={{width: 100, height: 100}}
                        source={require('../assets/guardcorp_logo.png')}/>
                 <Text className={'text-2xl text-white mt-4'}>Security Guard App</Text>
                 <Text className={'text-white mt-4'}>Login to begin your shift</Text>
