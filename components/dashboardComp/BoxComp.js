@@ -98,7 +98,7 @@ export default function BoxComp(props) {
 
             <View className={'bg-[#475c6f] h-[21%] w-[46%] mr-1 mb-2'}>
                 <CustomButton
-                    addStyle={`h-full rounded-lg border border-white ${patrolStarted ? 'bg-cyan-700' : 'bg-cyan-500'}`}
+                    addStyle={`h-full rounded-lg flex justify-center items-center border border-white ${patrolStarted ? 'bg-cyan-700' : 'bg-cyan-500'}`}
                     onPress={async () => {
                         if (patrolStarted) {
                             setAlertContent("Patrol has already started");
@@ -112,15 +112,15 @@ export default function BoxComp(props) {
 
 
                     }}>
-                    <View className={'flex justify-center items-center'}>
-                        <Text className={'text-center text-base mb text-white'}>START PATROL</Text>
+                    <>
+                        <Text className={'text-center text-base mb text-white absolute z-10 top-2'}>START PATROL</Text>
                         <MaterialIcons name={'play-circle-outline'} size={70} color={'#475c6f'}/>
-                        {patrolStarted && <Text className={'text-white text-center text-xs'}>Patrol Started</Text>}
-                    </View>
+                        {patrolStarted && <Text className={'text-white text-center text-xs absolute z-10 bottom-3'}>Patrol Started</Text>}
+                    </>
                 </CustomButton>
             </View>
             <View className={'bg-[#475c6f] h-[21%] w-[46%] rounded-lg ml-1 mb-2'}>
-                <CustomButton addStyle={'h-full border border-white bg-cyan-500 '} onPress={() => {
+                <CustomButton addStyle={'h-full flex justify-center items-center border border-white bg-cyan-500 '} onPress={() => {
                     if (patrolStarted === false) {
                         setAlertContent("Patrol has not yet started");
                         setAlertVisible(true);
@@ -128,13 +128,13 @@ export default function BoxComp(props) {
                         setPatrolModalVisible(true);
                     }
                 }}>
-                    <View className={'flex justify-center items-center'}>
-                        <Text className={'text-center text-base mb-2 text-white'}>STOP PATROL</Text>
+                    <>
+                        <Text className={'text-center text-base mb-2 text-white absolute z-10 top-2'}>STOP PATROL</Text>
                         <View
                             className={'w-14 h-14 rounded-full border-4 border-[#475c6f] flex items-center justify-center'}>
                             <View className={'bg-[#475c6f] h-6 w-6'}></View>
                         </View>
-                    </View>
+                    </>
                 </CustomButton>
             </View>
             <View className={'bg-[#475c6f] h-[21%] w-[46%] mr-1 mb-2'}>
@@ -146,14 +146,14 @@ export default function BoxComp(props) {
                 <CustomBox title={'INSPECTION'} icon={'policy'} onPress={() => setInspectionModalVisible(true)}/>
             </View>
             <View className={'bg-[#475c6f] h-[21%] w-[94%] mb-2'}>
-                <CustomButton addStyle={'h-full rounded-2xl border border-red-500 bg-cyan-500'}
+                <CustomButton addStyle={'h-full flex justify-center items-center rounded-2xl border border-red-500 bg-cyan-500'}
                               onPress={() => {
                                   setEndShiftModalVisible(true);
                               }}>
-                    <View className={'flex justify-center items-center'}>
-                        <Text className={'text-center text-base mb text-white'}>END SHIFT</Text>
+                    <>
+                        <Text className={'text-center text-base mb text-white absolute z-10 top-2'}>END SHIFT</Text>
                         <MaterialIcons name={'highlight-off'} size={70} color={'red'}/>
-                    </View>
+                    </>
                 </CustomButton>
             </View>
         </View>
